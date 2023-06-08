@@ -1,0 +1,53 @@
+import telebot
+
+
+TOKEN = '5988429163:AAHRbEf1rcnquqHYQIho_uavJ7G5hvMjN80'
+
+
+bot = telebot.TeleBot(TOKEN)
+
+
+keys = {
+    'евро': 'EUR',
+    'доллар': 'USD',
+    'рубль': 'RUB',
+}
+
+
+@bot.massange_handler()
+def echo_test(message: telebot.type.Message)
+    bot.send_message(message.chat.id, 'hello')
+    
+    
+
+    
+    
+@bot.massange_handler(commands=['start', 'help'])
+def help(message: telebot.types.Message):
+    text = 'чтобы начать работу введите коменду боту в следующем виде:\n(имя валюты)\
+<имя валюты в которой надо узнать цену первой валюты> \
+<количество первой валюты>\nУвидеть список всех доступных валют: /values'
+    bot.replly_to(message, text)
+    
+    
+
+
+@bot.massange_handler(commands=['values'])
+def values(message: telebot.types.Message):
+    text = 'Доступные валюты'
+    for key in keys.keys():
+        text = '\n'.join((text, key, ))
+    bot.reply_to(message, text)
+    
+    
+@bot.massange_handler(content_types=['text',])
+def convect(messange: telebot.types.Message):
+    quote, base, amount = message.text.split(' ')
+    r = requests.get(f'https://min-api.cryptocompare.com/data/price?fsym={keys[quote]}={keys[base]}')
+    total_base = json.loads(r.content)[keys[base]]
+    text = f'Цена {amount} {quote} в {base} - {total_base}
+    bot.send_message(message.chat.id, text)
+
+    
+bot.polling()
+    
